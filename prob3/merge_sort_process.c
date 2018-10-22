@@ -81,7 +81,8 @@ void merge(int * sharedArray,int l,int r)
     int l1 = mid-l+1;
     int l2 = r-mid;  // r-(mid+1)+1;
     int ii;
-    int left_arr[100009],right_arr[100009];
+    int left_arr[100009];
+    int right_arr[100009];
     for(ii=0;ii<l2;ii++)
     {
         right_arr[ii]=sharedArray[ii+mid+1];
@@ -174,15 +175,16 @@ void mergesort(int * sharedArray , int l ,int r )
     // to create left child process
     lpid = fork();   
 
-    if(lpid<0)
-    {
-        perror("Error while forking left process\n");
-        return;
-    }
-    else if(lpid==0)
+    
+    if(lpid==0)
     {
         mergesort(sharedArray,l,mid);
         exit(0);
+    }
+    else if(lpid<0)
+    {
+        perror("Error while forking left process\n");
+        return;
     }
     else
     {
@@ -202,6 +204,47 @@ void mergesort(int * sharedArray , int l ,int r )
 
     waitpid(lpid,&status,0);
     waitpid(rpid,&status,0);
+
+    int p,q;
+    // / 	int i, j, k;
+// 	int n1 = m - l + 1;
+// 	int n2 =  r - m;
+// 	int la[10000],ra[10000];
+// 	for(i=0;i<n1;i++)
+// 		la[i]=vec[l+i];
+// 	for(j=0;j<n2;j++)
+// 		ra[j]=vec[m+j+1];
+// 	i=0;
+// 	j=0;
+// 	k=l;
+// 	while (i < n1 && j < n2)
+// 	{
+// 		if (la[i] <= ra[j])
+// 		{
+// 			vec[k] = la[i];
+// 			i++;
+// 		}
+// 		else
+// 		{
+// 			vec[k] = ra[j];
+// 			j++;
+// 		}
+// 		k++;
+// 	}
+// 	while (i < n1)
+// 	{
+// 		vec[k] = la[i];
+// 		i++;
+// 		k++;
+// 	}
+// 	while (j < n2)
+// 	{
+// 		vec[k] = ra[j];
+// 		j++;
+// 		k++;
+// 	}
+// }
+
 
     merge(sharedArray,l,r);
 }
@@ -246,47 +289,6 @@ void mergesort(int * sharedArray , int l ,int r )
 // 	}
 // 	waitpid(lpid, &status, 0);
 // 	waitpid(rpid, &status, 0);
-	
-
-// 	int i, j, k;
-// 	int n1 = m - l + 1;
-// 	int n2 =  r - m;
-// 	int la[10000],ra[10000];
-// 	for(i=0;i<n1;i++)
-// 		la[i]=vec[l+i];
-// 	for(j=0;j<n2;j++)
-// 		ra[j]=vec[m+j+1];
-// 	i=0;
-// 	j=0;
-// 	k=l;
-// 	while (i < n1 && j < n2)
-// 	{
-// 		if (la[i] <= ra[j])
-// 		{
-// 			vec[k] = la[i];
-// 			i++;
-// 		}
-// 		else
-// 		{
-// 			vec[k] = ra[j];
-// 			j++;
-// 		}
-// 		k++;
-// 	}
-// 	while (i < n1)
-// 	{
-// 		vec[k] = la[i];
-// 		i++;
-// 		k++;
-// 	}
-// 	while (j < n2)
-// 	{
-// 		vec[k] = ra[j];
-// 		j++;
-// 		k++;
-// 	}
-// }
-
 
 
 
