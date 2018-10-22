@@ -8,6 +8,7 @@ int rem_pl,rem_ref,players,refrees;
 int persons;
 int pc,rc;
 int n;
+int pcq,rcq;
 // int player_arr[200005];
 // int refree_arr[100005];
 int match;
@@ -28,6 +29,10 @@ void *RefreeEntry()
     // refree_arr[rc]=1;
     rem_ref--;
     printf("Refree %d enters the academey. Remaining refrees = %d\n",rc,rem_ref);
+    pthread_mutex_lock(&organiser);
+    printf("Refree %d meets the organiser\n",rcq+1);
+    rcq=rc;
+    pthread_mutex_unlock(&organiser);
     pthread_mutex_unlock(&refree_mux);
 
 }
@@ -39,6 +44,10 @@ void *PlayerEntry()
     // player_arr[pc]=1;
     rem_pl--;
     printf("PLayer %d enters the academey. Remaining players = %d\n",pc,rem_pl);
+    pthread_mutex_lock(&organiser);
+    printf("PLayer %d meets the organiser\n",pcq+1);
+    pcq=pc;
+    pthread_mutex_unlock(&organiser);    
     pthread_mutex_unlock(&player_mux);
 
     // 2 players meet organiser and then rest of the work happens
@@ -52,9 +61,9 @@ void *Organiser()
         
         int req_players=match*2;
 
-        pthread_mutex_lock(&player_mux);
-        pthread_mutex_lock(&refree_mux);
-        if(pc>=req_players && rc>=match)
+        // pthread_mutex_lock(&player_mux);
+        // pthread_mutex_lock(&refree_mux);
+        if(pcq>=req_players && rcq>=match)
         {
             printf("Player %d enters the court and starts warmup\n",(match*2)-1);
             sleep(1);
@@ -68,12 +77,13 @@ void *Organiser()
             printf("Refree %d starts the game and the organiser is now free\n",match);
             match++;
         }
-        pthread_mutex_unlock(&player_mux);
-        pthread_mutex_unlock(&refree_mux);
+        // pthread_mutex_unlock(&player_mux);
+        // pthread_mutex_unlock(&refree_mux);
 
         pthread_mutex_unlock(&organiser);
         if(match==(n+1))
         {
+            printf("Organiser has now organised all the matches and is now free to entertain u\n");
             break;
         }
     }
